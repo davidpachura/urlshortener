@@ -13,6 +13,7 @@ services:
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
     depends_on:
       - db
+      - flyway
 
   db:
     image: postgres:15
@@ -26,6 +27,19 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  flyway:
+    image: flyway/flyway:10
+    container_name: urlshortener-flyway
+    environment:
+      FLYWAY_USER: postgres
+      FLYWAY_PASSWORD: postgres
+      FLYWAY_URL: jdbc:postgresql://db:5432/urlshortener
+    command: migrate
+    depends_on:
+      - db
+    volumes:
+      - ./src/main/resources/db/migration:/flyway/sql
 
 volumes:
   postgres_data:
