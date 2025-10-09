@@ -27,7 +27,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   flyway:
-    image: flyway/flyway:10
+    image: flyway/flyway:latest
     container_name: urlshortener-flyway
     environment:
       FLYWAY_USER: postgres
