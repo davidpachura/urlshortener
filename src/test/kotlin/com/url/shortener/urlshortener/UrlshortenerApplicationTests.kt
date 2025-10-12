@@ -1,12 +1,9 @@
 package com.url.shortener.urlshortener
 
+import com.url.shortener.urlshortener.repositories.RepositoryTestBase
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.ActiveProfiles
 
-@ActiveProfiles("test")
-@SpringBootTest
-class UrlshortenerApplicationTests {
+class UrlshortenerApplicationTests: RepositoryTestBase() {
 
 	@Test
 	fun contextLoads() {
