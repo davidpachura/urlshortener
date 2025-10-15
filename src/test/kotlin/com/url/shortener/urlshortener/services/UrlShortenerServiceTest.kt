@@ -10,6 +10,7 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
+import java.util.regex.Pattern
 
 @ExtendWith(MockitoExtension::class)
 class UrlShortenerServiceTest {
@@ -24,11 +25,13 @@ class UrlShortenerServiceTest {
     fun `should shorten provided url`() {
         val urlCreation = UrlCreation(url = "url")
 
-        whenever(urlShortenerRepository.save(any<UrlEntity>())).thenReturn(UrlEntity(url = urlCreation.url, shortCode = "shortCode"))
+        whenever(urlShortenerRepository.save(any<UrlEntity>())).thenReturn(urlCreation.toUrlEntity())
 
         val result = urlShortenerService.shortenUrl(urlCreation)
 
-        assert(result == "shortCode")
+        val pattern = Pattern.compile("^[0-9a-fA-F]{8}$")
+
+        assert(pattern.matcher(result).matches())
     }
 
     @Test
