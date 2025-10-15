@@ -7,7 +7,6 @@ This is a simple URL shortener service built with Spring Boot and Kotlin.
 To run this project, you need to have the following installed:
 
 - Java 17
-- Gradle 8.10
 - Docker
 
 ## What it does
