@@ -1,5 +1,6 @@
 package com.url.shortener.urlshortener.controllers
 
+import arrow.core.Either
 import com.url.shortener.urlshortener.models.creations.UrlCreation
 import com.url.shortener.urlshortener.services.UrlShortenerService
 import org.junit.jupiter.api.Test
@@ -21,12 +22,13 @@ class UrlShortenerControllerTest {
 
     @Autowired
     private lateinit var mockMvc: MockMvc
+
     @MockitoBean
     private lateinit var urlShortenerService: UrlShortenerService
 
     @Test
     fun `should shorten provided url`() {
-        whenever(urlShortenerService.shortenUrl(any<UrlCreation>())).thenReturn("shortCode")
+        whenever(urlShortenerService.shortenUrl(any<UrlCreation>())).thenReturn(Either.Right("shortCode"))
 
         mockMvc.perform(post("/api/v1/urls/shorten").param("url", "url"))
             .andExpect(status().isOk)
@@ -35,7 +37,7 @@ class UrlShortenerControllerTest {
 
     @Test
     fun `should return original url when it exists`() {
-        whenever(urlShortenerService.getOriginalUrl(any<String>())).thenReturn("url")
+        whenever(urlShortenerService.getOriginalUrl(any<String>())).thenReturn(Either.Right("url"))
 
         mockMvc.perform(get("/api/v1/urls/{shortCode}", "shortCode"))
             .andExpect(status().isOk)

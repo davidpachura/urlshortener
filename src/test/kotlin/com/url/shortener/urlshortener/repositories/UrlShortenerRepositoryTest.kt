@@ -16,9 +16,10 @@ class UrlShortenerRepositoryTest: RepositoryTestBase() {
     fun `should save entity and find by short code`() {
         val urlEntity = UrlEntity(url = "url", shortCode = "shortCode")
         urlShortenerRepository.save(urlEntity)
-        val savedEntity = urlShortenerRepository.getByShortCode("shortCode")
+        val savedEntity = urlShortenerRepository.findByShortCode("shortCode")
 
-        assert(savedEntity.url == urlEntity.url)
+        assert(savedEntity != null)
+        assert(savedEntity!!.url == urlEntity.url)
         assert(savedEntity.shortCode == urlEntity.shortCode)
         assert(savedEntity.id != null)
     }

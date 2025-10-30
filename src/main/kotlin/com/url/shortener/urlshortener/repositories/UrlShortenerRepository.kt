@@ -6,5 +6,5 @@ import java.util.UUID
 
 
 interface UrlShortenerRepository : JpaRepository<UrlEntity, UUID> {
-    fun getByShortCode(shortCode: String): UrlEntity
+    fun findByShortCode(shortCode: String): UrlEntity?
 }
