@@ -2,6 +2,7 @@ package com.url.shortener.urlshortener.controllers
 
 import com.url.shortener.urlshortener.models.creations.UrlCreation
 import com.url.shortener.urlshortener.models.errors.UrlError
+import com.url.shortener.urlshortener.models.errors.UrlError.*
 import com.url.shortener.urlshortener.services.UrlShortenerService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -35,10 +36,10 @@ class UrlShortenerController(
 
     private fun mapError(error: UrlError): ResponseEntity<Any> =
         when (error) {
-            is UrlError.InvalidUrl -> ResponseEntity.badRequest().body(error)
-            is UrlError.UrlNotFound -> ResponseEntity.notFound().build()
-            is UrlError.Unexpected -> ResponseEntity.internalServerError().body(error)
-            is UrlError.BadRequest -> ResponseEntity.badRequest().body(error)
-            is UrlError.Conflict -> ResponseEntity.status(409).body(error)
+            is InvalidUrl -> ResponseEntity.badRequest().body(error)
+            is UrlNotFound -> ResponseEntity.notFound().build()
+            is Unexpected -> ResponseEntity.internalServerError().body(error)
+            is BadRequest -> ResponseEntity.badRequest().body(error)
+            is Conflict -> ResponseEntity.status(409).body(error)
         }
 }
