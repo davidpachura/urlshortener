@@ -3,6 +3,7 @@ package com.url.shortener.urlshortener.services
 import com.url.shortener.urlshortener.models.creations.UrlCreation
 import com.url.shortener.urlshortener.models.entities.UrlEntity
 import com.url.shortener.urlshortener.repositories.UrlShortenerRepository
+import io.kotest.assertions.arrow.core.shouldBeLeft
 import io.kotest.assertions.arrow.core.shouldBeRight
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -24,7 +25,7 @@ class UrlShortenerServiceTest {
 
     @Test
     fun `should shorten provided url`() {
-        val urlCreation = UrlCreation(url = "url")
+        val urlCreation = UrlCreation(url = "https://www.test.com")
 
         whenever(urlShortenerRepository.save(any<UrlEntity>())).thenReturn(urlCreation.toUrlEntity())
 
@@ -41,5 +42,12 @@ class UrlShortenerServiceTest {
         whenever(urlShortenerRepository.findByShortCode(shortCode)).thenReturn(UrlEntity(url = "url", shortCode = shortCode))
         val result = urlShortenerService.getOriginalUrl(shortCode).shouldBeRight()
         assert(result == "url")
+    }
+
+    @Test
+    fun `should validate if provided url is invalid`() {
+        val urlCreation = UrlCreation(url = "invalid url")
+
+        urlShortenerService.shortenUrl(urlCreation).shouldBeLeft()
     }
 }
