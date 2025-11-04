@@ -2,6 +2,7 @@ package com.url.shortener.urlshortener.services
 
 import com.url.shortener.urlshortener.models.creations.UrlCreation
 import com.url.shortener.urlshortener.models.entities.UrlEntity
+import com.url.shortener.urlshortener.models.errors.UrlError
 import com.url.shortener.urlshortener.repositories.UrlShortenerRepository
 import io.kotest.assertions.arrow.core.shouldBeLeft
 import io.kotest.assertions.arrow.core.shouldBeRight
@@ -12,6 +13,7 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
+import java.time.LocalDateTime
 import java.util.regex.Pattern
 
 @ExtendWith(MockitoExtension::class)
@@ -49,5 +51,13 @@ class UrlShortenerServiceTest {
         val urlCreation = UrlCreation(url = "invalid url")
 
         urlShortenerService.shortenUrl(urlCreation).shouldBeLeft()
+    }
+
+    @Test
+    fun `shortcode should expire after 24 hours`() {
+        val shortCode = "shortCode"
+        whenever(urlShortenerRepository.findByShortCode(shortCode)).thenReturn(UrlEntity(url = "url", shortCode = shortCode, createdAt = LocalDateTime.now().minusHours(25)))
+        val result = urlShortenerService.getOriginalUrl(shortCode).shouldBeLeft()
+        assert(result is UrlError.UrlExpired)
     }
 }

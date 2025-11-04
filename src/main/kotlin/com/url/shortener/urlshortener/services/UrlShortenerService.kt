@@ -16,9 +16,16 @@ class UrlShortenerService(
     private val urlShortenerRepository: UrlShortenerRepository
 ) {
     fun getOriginalUrl(shortCode: String): Either<UrlError, String> = either {
-        val urlEntity = urlShortenerRepository.findByShortCode(shortCode)?.url
-            ?: return UrlNotFound("Url not found").left()
-        urlEntity
+        val urlEntity = urlShortenerRepository.findByShortCode(shortCode)
+
+        if (urlEntity == null) {
+            return UrlNotFound("Url with short code $shortCode not found").left()
+        } else if(urlEntity.isExpired()) {
+            urlShortenerRepository.delete(urlEntity)
+            return UrlExpired("Url with short code $shortCode expired").left()
+        }
+
+        urlEntity.url
     }
 
     @Transactional

@@ -18,4 +18,6 @@ data class UrlEntity (
     val shortCode: String,
 
     val createdAt: LocalDateTime = LocalDateTime.now()
-)
+) {
+    fun isExpired(): Boolean = createdAt.isBefore(LocalDateTime.now().minusHours(24))
+}
