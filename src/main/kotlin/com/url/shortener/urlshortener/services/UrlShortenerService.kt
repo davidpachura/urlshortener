@@ -40,6 +40,16 @@ class UrlShortenerService(
         }
     }
 
+    @Transactional
+    fun shortenUrls(urlCreations: List<UrlCreation>): Either<UrlError, List<String>> = Either.catch {
+        listOf("")
+    }.mapLeft {
+        when (it) {
+            is IllegalArgumentException -> InvalidUrl("Invalid url")
+            else -> Unexpected("Unexpected error")
+        }
+    }
+
     private fun validateUrl(url: String): Either<UrlError, Unit> = either {
         val uri = URI(url)
         uri.scheme != null && uri.host != null

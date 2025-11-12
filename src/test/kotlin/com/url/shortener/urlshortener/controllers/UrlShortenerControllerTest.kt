@@ -43,4 +43,13 @@ class UrlShortenerControllerTest {
             .andExpect(status().isOk)
             .andExpect(content().string("url"))
     }
+
+    @Test
+    fun `batch post should handle many urls`() {
+        whenever(urlShortenerService.shortenUrls(any<List<UrlCreation>>())).thenReturn(Either.Right(listOf("shortCode1", "shortCode2", "shortCode3")))
+
+        mockMvc.perform(post("/api/v1/urls/shorten/batch").param("urls", "url1", "url2", "url3"))
+            .andExpect(status().isOk)
+            .andExpect(content().string("[\"shortCode1\",\"shortCode2\",\"shortCode3\"]"))
+    }
 }

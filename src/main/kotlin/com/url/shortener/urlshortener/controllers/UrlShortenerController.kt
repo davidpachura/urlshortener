@@ -26,4 +26,13 @@ class UrlShortenerController(
         val urlCreation = UrlCreation(url = url)
         return urlShortenerService.shortenUrl(urlCreation).respond()
     }
+
+    @PostMapping("/shorten/batch")
+    fun shortenUrls(@RequestParam urls: List<String>): ResponseEntity<Any> {
+        val urlCreations = urls.map { url ->
+            UrlCreation(url = url)
+        }
+
+        return urlShortenerService.shortenUrls(urlCreations).respond()
+    }
 }
